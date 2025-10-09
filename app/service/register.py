@@ -8,7 +8,7 @@ from passlib.hash import argon2
 
 def registerUser(tempuser: UserCreate, db: Session):
     finduser = db.query(User).filter(User.email == tempuser.email).first()
-    if finduser: raise ValueError("Пользователь с таким email уже существует")
+    if finduser: return None
     print(f'hash pass {argon2.hash(tempuser.password)}')
     newuser = User(
         fullname = tempuser.fullname,
