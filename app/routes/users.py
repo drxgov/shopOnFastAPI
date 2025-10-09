@@ -5,26 +5,15 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.service import register
 from app.service import auth
+from app.service import utils
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/profile")
-async def profile(request: Request, db: Session = Depends(get_db)):
-    from app.models import User
-    xuser = request.cookies.get("user_email")
-    if not xuser: return RedirectResponse('/login',status_code = 303)
-    dbuser = db.query(User).filter(User.email == xuser).first()
-    return templates.TemplateResponse("profile.html", {
-        "request": request,
-        "user": dbuser,
-        "userlogin":True,
-        })
-
 @router.post("/logout")
 async def logoutUser():
     response = RedirectResponse(url="/", status_code=303)
-    response.delete_cookie("user_email")
+    response.delete_cookie("access_token")
     return response
 
 @router.get('/login')
@@ -44,11 +33,12 @@ async def loginUser(
         "error":"неверный логин или пароль"
     })
     response = RedirectResponse(url = '/profile',status_code = 303)
+    access_token = utils.create_access_token(data={"sub": dbuser.email})
     response.set_cookie(
-        key="user_email", 
-        value=dbuser.email, 
-        httponly=True,        # чтобы не достать из JS
-        max_age=60*60*24*7,   # неделя
+        key="access_token", 
+        value=access_token, 
+        httponly=True,        
+        max_age=60*60*24*7,
         samesite="lax"
     )
     return response
