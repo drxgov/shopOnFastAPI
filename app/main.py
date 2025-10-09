@@ -4,9 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes import shop
 from app.routes import profile
 from app.routes import users
-from app.database import Base,engine
 
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.mount('/static',StaticFiles(directory='static'),name = 'static')

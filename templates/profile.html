@@ -5,55 +5,102 @@
 {% block content %}
 <div class="container my-5">
   <div class="row">
-    <!-- Боковое меню -->
+    <!-- Сайдбар -->
     <div class="col-md-3 mb-4">
-      <div class="list-group shadow-sm">
-        <a href="#" class="list-group-item list-group-item-action active">
+      <div class="list-group shadow-sm" id="sidebar">
+        <a href="#" class="list-group-item list-group-item-action active" data-target="profile">
           <i class="bi bi-person-circle me-2"></i> Профиль
         </a>
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="#" class="list-group-item list-group-item-action" data-target="orders">
           <i class="bi bi-bag-check me-2"></i> Заказы
         </a>
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="#" class="list-group-item list-group-item-action" data-target="promo">
           <i class="bi bi-ticket-perforated me-2"></i> Промокоды
         </a>
-        <a href="#" class="list-group-item list-group-item-action">
+        <a href="#" class="list-group-item list-group-item-action" data-target="payments">
           <i class="bi bi-credit-card me-2"></i> Способы оплаты
         </a>
         <form action="/logout" method="post">
-        <button class="list-group-item list-group-item-action text-danger" type="submit">
-          <i class="bi bi-box-arrow-right me-2"></i> Выйти
-        </button>
-      </form>
+          <button class="list-group-item list-group-item-action text-danger" type="submit">
+            <i class="bi bi-box-arrow-right me-2"></i> Выйти
+          </button>
+        </form>
       </div>
     </div>
 
-    <!-- Контент профиля -->
-    <div class="col-md-9">
-      <div class="card shadow-sm rounded-3">
-        <div class="card-body">
-          <h4 class="mb-3">Личный кабинет</h4>
+    <!-- Основной контент -->
+    <div class="col-md-9" id="content">
+      <div id="profile" class="tab-content fade-show">
+        <div class="card shadow-sm rounded-3">
+          <div class="card-body">
+            <h4 class="mb-3">Личный кабинет</h4>
 
-          <div class="d-flex align-items-center mb-4">
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                 alt="Avatar" class="rounded-circle me-3" width="80" height="80">
-            <div>
-              <h5 class="mb-1">{{ user.fullname if user else "Имя пользователя" }}</h5>
-              <p class="text-muted mb-0">{{ user.email if user else "example@mail.com" }}</p>
+            <div class="d-flex align-items-center mb-4">
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                   alt="Avatar" class="rounded-circle me-3" width="80" height="80">
+              <div>
+                <h5 class="mb-1">{{ user.fullname if user else "Имя пользователя" }}</h5>
+                <p class="text-muted mb-0">{{ user.email if user else "example@mail.com" }}</p>
+              </div>
             </div>
+
+            <hr>
+
+            <h6 class="text-muted mb-3">Информация профиля</h6>
+            <p><strong>ФИО:</strong> {{ user.fullname if user else "Имя Фамилия" }}</p>
+            <p><strong>Дата рождения:</strong> {{ user.birthdate if user else "01.01.2000" }}</p>
+            <p><strong>Номер телефона:</strong> {{ user.phoneNumber if user else "+7 (999) 999-99-99" }}</p>
+            <p><strong>Почта:</strong> {{ user.email if user else "example@mail.com" }}</p>
           </div>
-
-          <hr>
-
-          <h6 class="text-muted mb-3">Информация профиля</h6>
-          <p><strong>ФИО:</strong> {{ user.fullname if user else "Имя Фамилия" }}</p>
-          <p><strong>Дата рождения:</strong> {{ user.birthdate if user else "01.01.2000" }}</p>
-          <p><strong>Номер телефона:</strong> {{ user.phoneNumber if user else "+7 (999) 999-99-99" }}</p>
-          <p><strong>Почта:</strong> {{ user.email if user else "example@mail.com" }}</p>
-
         </div>
       </div>
+
+      <div id="orders" class="tab-content d-none">Список заказов</div>
+      <div id="promo" class="tab-content d-none">Твои промокоды</div>
+      <div id="payments" class="tab-content d-none">Способы оплаты</div>
     </div>
   </div>
 </div>
+
+<style>
+  .tab-content {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    position: absolute;
+    width: 100%;
+  }
+
+  .tab-content.fade-show {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+  }
+</style>
+
+<script>
+  const sidebarLinks = document.querySelectorAll("#sidebar a[data-target]");
+  const tabs = document.querySelectorAll(".tab-content");
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Активная ссылка
+      sidebarLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+
+      const target = link.dataset.target;
+      tabs.forEach(tab => {
+        if(tab.id === target) {
+          tab.classList.add("fade-show");
+          tab.classList.remove("d-none");
+        } else {
+          tab.classList.remove("fade-show");
+          setTimeout(() => tab.classList.add("d-none"), 500); // ждём пока анимация закончится
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

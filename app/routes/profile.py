@@ -11,6 +11,7 @@ templates = Jinja2Templates(directory="templates")
 @router.get("/profile")
 async def profile(request: Request, db: Session = Depends(get_db)):
     xuser = request.cookies.get("access_token")
+    if not xuser: return RedirectResponse('/login',status_code = 303)
     xuser = utils.get_current_user_from_request(request,db)
     if not xuser: return RedirectResponse('/login',status_code = 303)
     return templates.TemplateResponse("profile.html", {
