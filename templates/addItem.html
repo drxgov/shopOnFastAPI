@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}Добавить товар или категорию{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Добавить новую категорию</h2>
+        <form action="/add_category" method="post"> <!-- Замените '/add_category' на реальный маршрут обработки -->
+            <div class="mb-3">
+                <label for="category_name" class="form-label">Название категории</label>
+                <input type="text" class="form-control" id="category_name" name="category_name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить категорию</button>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h2 class="mb-4">Добавить новый товар</h2>
+        <form action="/add_product" method="post"> <!-- Замените '/add_product' на реальный маршрут обработки -->
+            <div class="mb-3">
+                <label for="product_name" class="form-label">Название товара</label>
+                <input type="text" class="form-control" id="product_name" name="product_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="product_description" class="form-label">Описание</label>
+                <textarea class="form-control" id="product_description" name="product_description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="product_price" class="form-label">Цена</label>
+                <input type="number" step="0.01" class="form-control" id="product_price" name="product_price" required>
+            </div>
+            <div class="mb-3">
+                <label for="product_category" class="form-label">Категория</label>
+                <select class="form-select" id="product_category" name="category_id" required> <!-- Предполагается, что передается ID категории -->
+                    <option value="">Выберите категорию</option>
+                    <!-- Пример динамического наполнения из списка категорий -->
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                    <!-- Если список категорий не передается, можно оставить заглушку -->
+                    <!--
+                    <option value="1">Электроника</option>
+                    <option value="2">Одежда</option>
+                    <option value="3">Книги</option>
+                    -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Добавить товар</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
