@@ -14,6 +14,7 @@ templates = Jinja2Templates(directory="templates")
 async def logoutUser():
     response = RedirectResponse(url="/", status_code=303)
     response.delete_cookie("access_token")
+    response.delete_cookie('user_login')
     return response
 
 @router.get('/login')
@@ -40,6 +41,10 @@ async def loginUser(
         httponly=True,        
         max_age=60*60*24*7,
         samesite="lax"
+    )
+    response.set_cookie(
+        key="user_login",
+        value = True
     )
     return response
 

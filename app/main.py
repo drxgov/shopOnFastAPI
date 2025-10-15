@@ -16,4 +16,4 @@ app.include_router(profile.router)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run('app.main:app',reload = True)
+    uvicorn.run('main:app',reload = True)

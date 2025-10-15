@@ -6,7 +6,7 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get('/')
 async def getMain(request: Request):
-    userlogin = request.cookies.get("user_email")
+    userlogin = request.cookies.get("user_login")
     return templates.TemplateResponse('main.html',{
         'request':request,
         'userlogin':userlogin
