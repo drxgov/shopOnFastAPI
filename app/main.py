@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes import shop
 from app.routes import profile
 from app.routes import users
-
+from app.routes import adminUtils
 
 app = FastAPI()
 app.mount('/static',StaticFiles(directory='static'),name = 'static')
@@ -13,7 +13,7 @@ templates = Jinja2Templates(directory = 'templates')
 app.include_router(shop.router)
 app.include_router(users.router)
 app.include_router(profile.router)
-
+app.include_router(adminUtils.router)
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run('main:app',reload = True)
