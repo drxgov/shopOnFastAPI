@@ -11,3 +11,7 @@ async def addItem(request: Request):
         'request':request,
         'userlogin':userlogin
     })
+
+@router.get('/admin')
+async def getAdminPanel(request: Request):
+    return templates.TemplateResponse('adminPanel.html')

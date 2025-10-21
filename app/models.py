@@ -12,6 +12,7 @@ class User(Base):
     email = Column(String,nullable = False,unique = True)
     phoneNumber = Column(String,nullable = False,unique = True)
     birthdate = Column(Date,nullable = False)
+    adminStatus = Column(Boolean,nullable = False, default=False)
     orders = relationship('Order',back_populates = 'ordering')
 
 
